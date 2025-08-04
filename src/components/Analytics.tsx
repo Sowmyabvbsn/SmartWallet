@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Pie, Cell, BarChart, Bar } from 'recharts';
+import { useUser } from '@clerk/clerk-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Cell, BarChart, Bar, Pie } from 'recharts';
 import { TrendingUp, TrendingDown, PieChart, BarChart3, Calendar, Target } from 'lucide-react';
 
 export function Analytics() {
+  const { user } = useUser();
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
 
   const spendingByCategory = [
-    { name: 'Food & Dining', amount: 850.50, percentage: 32, color: 'bg-orange-500' },
-    { name: 'Shopping', amount: 650.25, percentage: 25, color: 'bg-purple-500' },
-    { name: 'Transportation', amount: 420.80, percentage: 16, color: 'bg-blue-500' },
-    { name: 'Utilities', amount: 380.45, percentage: 14, color: 'bg-green-500' },
-    { name: 'Entertainment', amount: 215.90, percentage: 8, color: 'bg-pink-500' },
-    { name: 'Healthcare', amount: 125.60, percentage: 5, color: 'bg-red-500' }
+    { name: 'Food & Dining', amount: 850.50, percentage: 32, color: '#FF8042' },
+    { name: 'Shopping', amount: 650.25, percentage: 25, color: '#8884D8' },
+    { name: 'Transportation', amount: 420.80, percentage: 16, color: '#00C49F' },
+    { name: 'Utilities', amount: 380.45, percentage: 14, color: '#FFBB28' },
+    { name: 'Entertainment', amount: 215.90, percentage: 8, color: '#FF8042' },
+    { name: 'Healthcare', amount: 125.60, percentage: 5, color: '#8DD1E1' }
   ];
 
   const monthlyTrends = [
-    { month: 'Aug', spending: 2400, income: 4500 },
-    { month: 'Sep', spending: 2200, income: 4500 },
-    { month: 'Oct', spending: 2600, income: 4500 },
-    { month: 'Nov', spending: 2300, income: 4500 },
-    { month: 'Dec', spending: 2800, income: 4500 },
-    { month: 'Jan', spending: 2840, income: 4500 }
+    { month: 'Aug', spending: 2400, income: 4500, savings: 2100 },
+    { month: 'Sep', spending: 2200, income: 4500, savings: 2300 },
+    { month: 'Oct', spending: 2600, income: 4500, savings: 1900 },
+    { month: 'Nov', spending: 2300, income: 4500, savings: 2200 },
+    { month: 'Dec', spending: 2800, income: 4500, savings: 1700 },
+    { month: 'Jan', spending: 2840, income: 4500, savings: 1660 }
   ];
 
   const savingsRate = 37;
@@ -78,7 +80,7 @@ export function Analytics() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-4">
             <PieChart className="h-8 w-8 text-purple-500" />
-            <div className="text-sm text-gray-500">#{highestCategory.percentage}%</div>
+            <div className="text-sm text-gray-500">{highestCategory.percentage}%</div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Top Category</h3>
           <p className="text-2xl font-bold text-gray-900">{highestCategory.name}</p>
@@ -112,6 +114,7 @@ export function Analytics() {
                 stroke="#3B82F6" 
                 strokeWidth={3}
                 dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }}
+                name="Spending"
               />
               <Line 
                 type="monotone" 
@@ -120,6 +123,15 @@ export function Analytics() {
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+                name="Income"
+              />
+              <Line 
+                type="monotone" 
+                dataKey="savings" 
+                stroke="#F59E0B" 
+                strokeWidth={2}
+                dot={{ fill: '#F59E0B', strokeWidth: 2, r: 4 }}
+                name="Savings"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -130,16 +142,16 @@ export function Analytics() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Spending by Category</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="h-64">
+          <div className="space-y-6">
+            <div className="h-64 flex justify-center">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <RechartsPieChart>
                   <Pie
                     data={spendingByCategory}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percentage }) => `${name} ${percentage}%`}
+                    label={({ percentage }) => `${percentage}%`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="amount"
@@ -149,7 +161,7 @@ export function Analytics() {
                     ))}
                   </Pie>
                   <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
-                </PieChart>
+                </RechartsPieChart>
               </ResponsiveContainer>
             </div>
             <div className="space-y-4">
@@ -218,6 +230,23 @@ export function Analytics() {
               </div>
               <p className="text-xs text-gray-600 mt-1">48% complete</p>
             </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-900">Investment Portfolio</span>
+                <span className="text-sm text-gray-600">$15,500 / $20,000</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="bg-indigo-500 h-3 rounded-full transition-all duration-500" style={{ width: '77.5%' }} />
+              </div>
+              <p className="text-xs text-gray-600 mt-1">77.5% complete</p>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium">
+              Set New Goal
+            </button>
           </div>
         </div>
       </div>
@@ -238,6 +267,36 @@ export function Analytics() {
               You have 7 active subscriptions. Canceling unused ones could save $45/month.
             </p>
           </div>
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <h4 className="font-medium text-gray-900 mb-2">Increase Emergency Fund</h4>
+            <p className="text-sm text-gray-600">
+              You're close to your emergency fund goal. Consider increasing contributions by $100/month.
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <h4 className="font-medium text-gray-900 mb-2">Investment Opportunity</h4>
+            <p className="text-sm text-gray-600">
+              With your current savings rate, you could invest an additional $300/month.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Monthly Comparison */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">Monthly Comparison</h3>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={monthlyTrends}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+              <Bar dataKey="income" fill="#10B981" name="Income" />
+              <Bar dataKey="spending" fill="#3B82F6" name="Spending" />
+              <Bar dataKey="savings" fill="#F59E0B" name="Savings" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

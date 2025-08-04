@@ -15,7 +15,7 @@ import { AIAssistant } from './components/AIAssistant';
 import { ExportCenter } from './components/ExportCenter';
 import { CollaborativeBudgets } from './components/CollaborativeBudgets';
 import { CurrencyConverter } from './components/CurrencyConverter';
-import { GoogleWalletIntegration } from './components/GoogleWalletIntegration';
+import { MockWalletPasses } from './components/MockWalletPasses';
 import { MockBankConnection } from './components/MockBankConnection';
 
 type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
@@ -54,7 +54,7 @@ function App() {
       case 'currency':
         return <CurrencyConverter />;
       case 'wallet':
-        return <GoogleWalletIntegration />;
+        return <MockWalletPasses />;
       case 'settings':
         return <Settings />;
       default:
@@ -89,7 +89,7 @@ function App() {
               <Route path="/export" element={<ExportCenter />} />
               <Route path="/budgets" element={<CollaborativeBudgets />} />
               <Route path="/currency" element={<CurrencyConverter />} />
-              <Route path="/wallet" element={<GoogleWalletIntegration />} />
+              <Route path="/wallet" element={<MockWalletPasses />} />
               <Route path="/bank-connection" element={<MockBankConnection />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -70,7 +70,7 @@ export function Header({ activeTab, onTabChange, onScanReceipt }: HeaderProps) {
               { id: 'export', icon: Download, label: 'Export' },
               { id: 'budgets', icon: Users, label: 'Budgets' },
               { id: 'currency', icon: Globe, label: 'Currency' },
-              { id: 'wallet', icon: CreditCard, label: 'Wallet' },
+              { id: 'wallet', icon: CreditCard, label: 'Passes' },
               { id: 'bank-connection', icon: CreditCard, label: 'Banks' },
               { id: 'settings', icon: Settings, label: 'Settings' },
             ].map(({ id, icon: Icon, label }) => (
