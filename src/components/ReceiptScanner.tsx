@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Camera, Upload, X, Check, Loader, Sparkles } from 'lucide-react';
+import { geminiAI } from '../services/geminiAI';
 
 interface ReceiptScannerProps {
   onClose: () => void;
@@ -38,28 +39,56 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    // Simulate scanned receipt data
-    const mockData = {
-      merchant: 'Target Store #1234',
-      date: new Date().toISOString().split('T')[0],
-      total: 87.43,
-      tax: 7.43,
-      subtotal: 80.00,
-      items: [
-        { name: 'Organic Milk', price: 4.99, category: 'Groceries' },
-        { name: 'Bread', price: 2.50, category: 'Groceries' },
-        { name: 'Coffee Pods', price: 12.99, category: 'Groceries' },
-        { name: 'Cleaning Supplies', price: 8.99, category: 'Household' },
-        { name: 'Phone Charger', price: 24.99, category: 'Electronics' },
-        { name: 'Snacks', price: 15.54, category: 'Groceries' },
-        { name: 'Shampoo', price: 9.99, category: 'Personal Care' }
-      ],
-      paymentMethod: 'Credit Card ending in 4521',
-      confidence: 96,
-      userId: user?.id
-    };
+    try {
+      // In production, you would first run OCR on the image
+      // For demo, we'll simulate OCR text
+      const mockOcrText = `
+        TARGET STORE #1234
+        123 MAIN ST
+        ANYTOWN, ST 12345
+        
+        ORGANIC MILK         $4.99
+        BREAD LOAF          $2.50
+        COFFEE PODS         $12.99
+        CLEANING SUPPLIES   $8.99
+        PHONE CHARGER       $24.99
+        SNACKS              $15.54
+        SHAMPOO             $9.99
+        
+        SUBTOTAL            $80.00
+        TAX                 $7.43
+        TOTAL               $87.43
+        
+        CREDIT CARD ****4521
+        ${new Date().toLocaleDateString()}
+      `;
+      
+      // Process with Gemini AI
+      const processedData = await geminiAI.processReceiptText(mockOcrText);
+      processedData.userId = user?.id;
+      
+      setScannedData(processedData);
+    } catch (error) {
+      console.error('Receipt processing failed:', error);
+      // Fallback to mock data
+      const mockData = {
+        merchant: 'Target Store #1234',
+        date: new Date().toISOString().split('T')[0],
+        total: 87.43,
+        tax: 7.43,
+        subtotal: 80.00,
+        items: [
+          { name: 'Organic Milk', price: 4.99, category: 'Groceries' },
+          { name: 'Bread', price: 2.50, category: 'Groceries' },
+          { name: 'Coffee Pods', price: 12.99, category: 'Groceries' }
+        ],
+        paymentMethod: 'Credit Card ending in 4521',
+        confidence: 85,
+        userId: user?.id
+      };
+      setScannedData(mockData);
+    }
 
-    setScannedData(mockData);
     setScanning(false);
   };
 

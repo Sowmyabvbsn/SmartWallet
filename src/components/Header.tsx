@@ -1,9 +1,9 @@
 import React from 'react';
 import { UserButton, useUser } from '@clerk/clerk-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Wallet, Home, FileText, BarChart3, Settings, Camera } from 'lucide-react';
+import { Wallet, Home, FileText, BarChart3, Settings, Camera, TrendingUp, Calendar, Bot, Download, Users, Globe, CreditCard } from 'lucide-react';
 
-type TabType = 'dashboard' | 'transactions' | 'analytics' | 'settings';
+type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
 
 interface HeaderProps {
   activeTab: TabType;
@@ -58,25 +58,32 @@ export function Header({ activeTab, onTabChange, onScanReceipt }: HeaderProps) {
       </header>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-around py-2">
+        <div className="max-w-7xl mx-auto px-2">
+          <div className="flex justify-around py-1 overflow-x-auto">
             {[
               { id: 'dashboard', icon: Home, label: 'Home' },
               { id: 'transactions', icon: FileText, label: 'Transactions' },
               { id: 'analytics', icon: BarChart3, label: 'Analytics' },
+              { id: 'investments', icon: TrendingUp, label: 'Investments' },
+              { id: 'bills', icon: Calendar, label: 'Bills' },
+              { id: 'ai-assistant', icon: Bot, label: 'AI Chat' },
+              { id: 'export', icon: Download, label: 'Export' },
+              { id: 'budgets', icon: Users, label: 'Budgets' },
+              { id: 'currency', icon: Globe, label: 'Currency' },
+              { id: 'wallet', icon: CreditCard, label: 'Wallet' },
               { id: 'settings', icon: Settings, label: 'Settings' },
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
                 onClick={() => handleTabChange(id as TabType)}
-                className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${
+                className={`flex flex-col items-center py-1 px-2 rounded-lg transition-colors min-w-0 ${
                   (location.pathname === `/${id}` || (location.pathname === '/' && id === 'dashboard'))
                     ? 'text-blue-600 bg-blue-50'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <Icon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">{label}</span>
+                <Icon className="h-4 w-4 mb-1" />
+                <span className="text-xs font-medium truncate">{label}</span>
               </button>
             ))}
           </div>

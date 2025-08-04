@@ -9,8 +9,15 @@ import { Settings } from './components/Settings';
 import { ReceiptScanner } from './components/ReceiptScanner';
 import { AuthPage } from './components/AuthPage';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { InvestmentDashboard } from './components/InvestmentDashboard';
+import { BillManager } from './components/BillManager';
+import { AIAssistant } from './components/AIAssistant';
+import { ExportCenter } from './components/ExportCenter';
+import { CollaborativeBudgets } from './components/CollaborativeBudgets';
+import { CurrencyConverter } from './components/CurrencyConverter';
+import { GoogleWalletIntegration } from './components/GoogleWalletIntegration';
 
-type TabType = 'dashboard' | 'transactions' | 'analytics' | 'settings';
+type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
@@ -33,6 +40,20 @@ function App() {
         return <Transactions />;
       case 'analytics':
         return <Analytics />;
+      case 'investments':
+        return <InvestmentDashboard />;
+      case 'bills':
+        return <BillManager />;
+      case 'ai-assistant':
+        return <AIAssistant />;
+      case 'export':
+        return <ExportCenter />;
+      case 'budgets':
+        return <CollaborativeBudgets />;
+      case 'currency':
+        return <CurrencyConverter />;
+      case 'wallet':
+        return <GoogleWalletIntegration />;
       case 'settings':
         return <Settings />;
       default:
@@ -61,6 +82,13 @@ function App() {
               <Route path="/dashboard" element={<Dashboard onScanReceipt={() => setShowScanner(true)} />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/analytics" element={<Analytics />} />
+              <Route path="/investments" element={<InvestmentDashboard />} />
+              <Route path="/bills" element={<BillManager />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/export" element={<ExportCenter />} />
+              <Route path="/budgets" element={<CollaborativeBudgets />} />
+              <Route path="/currency" element={<CurrencyConverter />} />
+              <Route path="/wallet" element={<GoogleWalletIntegration />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
