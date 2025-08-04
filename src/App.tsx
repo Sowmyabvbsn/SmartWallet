@@ -55,8 +55,6 @@ function App() {
         return <CurrencyConverter />;
       case 'wallet':
         return <GoogleWalletIntegration />;
-      case 'bank-connection':
-        return <MockBankConnection />;
       case 'settings':
         return <Settings />;
       default:
@@ -92,6 +90,7 @@ function App() {
               <Route path="/budgets" element={<CollaborativeBudgets />} />
               <Route path="/currency" element={<CurrencyConverter />} />
               <Route path="/wallet" element={<GoogleWalletIntegration />} />
+              <Route path="/bank-connection" element={<MockBankConnection />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

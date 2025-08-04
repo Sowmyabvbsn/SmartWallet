@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Users, Plus, Share2, Target, TrendingUp, Crown, UserPlus } from 'lucide-react';
+import { Users, Plus, Share2, Target, TrendingUp, Crown, UserPlus, User } from 'lucide-react';
 
 interface BudgetMember {
   id: string;

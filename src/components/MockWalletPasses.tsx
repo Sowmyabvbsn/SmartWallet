@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Wallet, Plus, QrCode, Download, Calendar, CreditCard, Gift, Users } from 'lucide-react';
+import { Wallet, Plus, QrCode, Download, Calendar, CreditCard, Gift, Users, User } from 'lucide-react';
 import { mockWalletService, MockWalletPass } from '../services/mockWalletService';
 
 export function MockWalletPasses() {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { TrendingUp, TrendingDown, DollarSign, PieChart, BarChart3, Target } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Cell, Pie } from 'recharts';
 import { investmentService, Portfolio } from '../services/investmentService';
 
 export function InvestmentDashboard() {
@@ -115,7 +115,7 @@ export function InvestmentDashboard() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPieChart>
-                <RechartsPieChart
+                <Pie
                   data={allocationData}
                   cx="50%"
                   cy="50%"
@@ -128,7 +128,7 @@ export function InvestmentDashboard() {
                   {allocationData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                </RechartsPieChart>
+                </Pie>
                 <Tooltip />
               </RechartsPieChart>
             </ResponsiveContainer>
