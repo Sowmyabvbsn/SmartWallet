@@ -294,10 +294,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [Wiki](https://github.com/yourusername/smart-wallet/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/smart-wallet/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/smart-wallet/discussions)
-- **Email**: support@smartwallet.com
+- **Email**: bommisowmya684@gmail.com
 
 ---
 
