@@ -170,42 +170,17 @@ export function Settings() {
           </h2>
         </div>
         <div className="p-6 space-y-4">
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <CreditCard className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h4 className="font-medium text-gray-900">Chase Sapphire •••• 4521</h4>
-                <p className="text-sm text-gray-600">Primary credit card</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Check className="h-5 w-5 text-green-600" />
-              <span className="text-sm text-green-600">Connected</span>
-            </div>
+          <div className="text-center py-8">
+            <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Bank Account Connection</h3>
+            <p className="text-gray-600 mb-4">
+              Connect your bank accounts to automatically sync transactions and get better insights.
+            </p>
+            <p className="text-sm text-blue-600 bg-blue-50 rounded-lg p-3">
+              💡 This demo uses mock bank data. In production, we would integrate with secure banking APIs 
+              to safely connect your real accounts with bank-grade security.
+            </p>
           </div>
-
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <CreditCard className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <h4 className="font-medium text-gray-900">Bank of America •••• 1234</h4>
-                <p className="text-sm text-gray-600">Checking account</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Check className="h-5 w-5 text-green-600" />
-              <span className="text-sm text-green-600">Connected</span>
-            </div>
-          </div>
-
-          <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg transition-colors flex items-center justify-center space-x-2">
-            <CreditCard className="h-4 w-4" />
-            <span>Add New Account</span>
-          </button>
         </div>
       </div>
 

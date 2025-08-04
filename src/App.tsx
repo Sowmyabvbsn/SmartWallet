@@ -16,6 +16,7 @@ import { ExportCenter } from './components/ExportCenter';
 import { CollaborativeBudgets } from './components/CollaborativeBudgets';
 import { CurrencyConverter } from './components/CurrencyConverter';
 import { GoogleWalletIntegration } from './components/GoogleWalletIntegration';
+import { MockBankConnection } from './components/MockBankConnection';
 
 type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
 
@@ -54,6 +55,8 @@ function App() {
         return <CurrencyConverter />;
       case 'wallet':
         return <GoogleWalletIntegration />;
+      case 'bank-connection':
+        return <MockBankConnection />;
       case 'settings':
         return <Settings />;
       default:

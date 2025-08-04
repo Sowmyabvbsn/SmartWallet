@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserButton, useUser } from '@clerk/clerk-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation ,Link} from 'react-router-dom';
 import { Wallet, Home, FileText, BarChart3, Settings, Camera, TrendingUp, Calendar, Bot, Download, Users, Globe, CreditCard } from 'lucide-react';
 
 type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
@@ -71,6 +71,7 @@ export function Header({ activeTab, onTabChange, onScanReceipt }: HeaderProps) {
               { id: 'budgets', icon: Users, label: 'Budgets' },
               { id: 'currency', icon: Globe, label: 'Currency' },
               { id: 'wallet', icon: CreditCard, label: 'Wallet' },
+              { id: 'bank-connection', icon: Link, label: 'Banks' },
               { id: 'settings', icon: Settings, label: 'Settings' },
             ].map(({ id, icon: Icon, label }) => (
               <button
