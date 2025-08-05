@@ -52,9 +52,7 @@ export const api = {
 
   // Receipt processing
   async processReceipt(file: File, userId: string): Promise<ReceiptData> {
-    await delay(2000); // Simulate AI processing time
-    
-    // Mock OCR and AI processing
+    await delay(2000); 
     return {
       merchant: 'Target Store #1234',
       date: new Date().toISOString().split('T')[0],

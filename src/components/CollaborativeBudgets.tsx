@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Users, Plus, Share2, Target, TrendingUp, Crown, UserPlus, User } from 'lucide-react';
+import { Users, Plus, Share2,  Crown, UserPlus, } from 'lucide-react';
 
 interface BudgetMember {
   id: string;
@@ -244,7 +244,6 @@ export function CollaborativeBudgets() {
               )}
             </div>
 
-            {/* Budget Progress */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-700">Budget Progress</span>
