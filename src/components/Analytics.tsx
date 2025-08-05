@@ -32,19 +32,19 @@ export function Analytics() {
   const COLORS = ['#FF8042', '#8884D8', '#00C49F', '#FFBB28', '#FF8042', '#8DD1E1'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-20 md:pb-24">
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Financial Analytics</h2>
-            <p className="text-gray-600">Insights into your spending patterns and financial health</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Financial Analytics</h2>
+            <p className="text-sm sm:text-base text-gray-600">Insights into your spending patterns and financial health</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
             >
               <option value="weekly">This Week</option>
               <option value="monthly">This Month</option>
@@ -56,52 +56,66 @@ export function Analytics() {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
-            <Target className="h-8 w-8 text-green-500" />
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <div className="bg-green-50 p-3 rounded-2xl">
+              <Target className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
+            </div>
+            <div className="bg-green-100 p-2 rounded-xl">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+            </div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Savings Rate</h3>
-          <p className="text-2xl font-bold text-gray-900">{savingsRate}%</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">{savingsRate}%</p>
           <p className="text-sm text-green-600">+5% from last month</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
-            <BarChart3 className="h-8 w-8 text-blue-500" />
-            <TrendingDown className="h-5 w-5 text-red-500" />
+            <div className="bg-blue-50 p-3 rounded-2xl">
+              <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
+            </div>
+            <div className="bg-red-100 p-2 rounded-xl">
+              <TrendingDown className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+            </div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Avg Monthly Expense</h3>
-          <p className="text-2xl font-bold text-gray-900">${avgMonthlyExpense.toLocaleString()}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">${avgMonthlyExpense.toLocaleString()}</p>
           <p className="text-sm text-red-600">+8% from last month</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
-            <PieChart className="h-8 w-8 text-purple-500" />
+            <div className="bg-purple-50 p-3 rounded-2xl">
+              <PieChart className="h-6 w-6 sm:h-8 sm:w-8 text-purple-500" />
+            </div>
             <div className="text-sm text-gray-500">{highestCategory.percentage}%</div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Top Category</h3>
-          <p className="text-2xl font-bold text-gray-900">{highestCategory.name}</p>
+          <p className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">{highestCategory.name}</p>
           <p className="text-sm text-gray-600">${highestCategory.amount.toFixed(2)}</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
-            <Calendar className="h-8 w-8 text-orange-500" />
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <div className="bg-orange-50 p-3 rounded-2xl">
+              <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
+            </div>
+            <div className="bg-green-100 p-2 rounded-xl">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+            </div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Budget Adherence</h3>
-          <p className="text-2xl font-bold text-gray-900">78%</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">78%</p>
           <p className="text-sm text-green-600">On track this month</p>
         </div>
       </div>
 
       {/* Spending Trends Chart */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Monthly Spending Trends</h3>
-        <div className="h-80">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Monthly Spending Trends</h3>
+        <div className="h-64 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={monthlyTrends}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -139,11 +153,11 @@ export function Analytics() {
       </div>
 
       {/* Category Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Spending by Category</h3>
           <div className="space-y-6">
-            <div className="h-64 flex justify-center">
+            <div className="h-48 sm:h-64 flex justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsPieChart>
                   <Pie
@@ -164,7 +178,7 @@ export function Analytics() {
                 </RechartsPieChart>
               </ResponsiveContainer>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {spendingByCategory.map((category, index) => (
                 <div key={category.name} className="flex items-center space-x-4">
                   <div 
@@ -173,8 +187,8 @@ export function Analytics() {
                   />
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-900">{category.name}</span>
-                      <span className="text-sm text-gray-600">${category.amount.toFixed(2)}</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-900">{category.name}</span>
+                      <span className="text-xs sm:text-sm text-gray-600">${category.amount.toFixed(2)}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -186,7 +200,7 @@ export function Analytics() {
                       />
                     </div>
                   </div>
-                  <div className="text-sm font-medium text-gray-600 w-12 text-right">
+                  <div className="text-xs sm:text-sm font-medium text-gray-600 w-8 sm:w-12 text-right">
                     {category.percentage}%
                   </div>
                 </div>
@@ -195,16 +209,16 @@ export function Analytics() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Financial Goals</h3>
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Emergency Fund</span>
-                <span className="text-sm text-gray-600">$8,500 / $10,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">$8,500 / $10,000</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-green-500 h-3 rounded-full transition-all duration-500" style={{ width: '85%' }} />
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div className="bg-green-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '85%' }} />
               </div>
               <p className="text-xs text-gray-600 mt-1">85% complete</p>
             </div>
@@ -212,10 +226,10 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Vacation Fund</span>
-                <span className="text-sm text-gray-600">$2,100 / $5,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">$2,100 / $5,000</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-blue-500 h-3 rounded-full transition-all duration-500" style={{ width: '42%' }} />
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div className="bg-blue-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '42%' }} />
               </div>
               <p className="text-xs text-gray-600 mt-1">42% complete</p>
             </div>
@@ -223,10 +237,10 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">New Car</span>
-                <span className="text-sm text-gray-600">$12,000 / $25,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">$12,000 / $25,000</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-purple-500 h-3 rounded-full transition-all duration-500" style={{ width: '48%' }} />
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div className="bg-purple-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '48%' }} />
               </div>
               <p className="text-xs text-gray-600 mt-1">48% complete</p>
             </div>
@@ -234,10 +248,10 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Investment Portfolio</span>
-                <span className="text-sm text-gray-600">$15,500 / $20,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">$15,500 / $20,000</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-indigo-500 h-3 rounded-full transition-all duration-500" style={{ width: '77.5%' }} />
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div className="bg-indigo-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '77.5%' }} />
               </div>
               <p className="text-xs text-gray-600 mt-1">77.5% complete</p>
             </div>
@@ -252,30 +266,30 @@ export function Analytics() {
       </div>
 
       {/* AI Recommendations */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 AI Recommendations</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white rounded-lg p-4 border border-blue-100">
+      <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl border border-blue-200/50 p-4 sm:p-6 shadow-lg">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">💡 AI Recommendations</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Reduce Food & Dining</h4>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               You spent 32% more on dining out this month. Consider meal planning to save ~$200/month.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-blue-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Optimize Subscriptions</h4>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               You have 7 active subscriptions. Canceling unused ones could save $45/month.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-blue-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Increase Emergency Fund</h4>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               You're close to your emergency fund goal. Consider increasing contributions by $100/month.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-blue-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Investment Opportunity</h4>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               With your current savings rate, you could invest an additional $300/month.
             </p>
           </div>
@@ -283,9 +297,9 @@ export function Analytics() {
       </div>
 
       {/* Monthly Comparison */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Monthly Comparison</h3>
-        <div className="h-80">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Monthly Comparison</h3>
+        <div className="h-64 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthlyTrends}>
               <CartesianGrid strokeDasharray="3 3" />
