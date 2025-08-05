@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { 
   User, 
@@ -31,6 +31,44 @@ export function Settings() {
   });
 
   const [showBalance, setShowBalance] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    // Load saved preferences
+    const savedNotifications = localStorage.getItem('notifications');
+    const savedPrivacy = localStorage.getItem('privacy');
+    const savedShowBalance = localStorage.getItem('showBalance');
+    
+    if (savedNotifications) {
+      setNotifications(JSON.parse(savedNotifications));
+    }
+    if (savedPrivacy) {
+      setPrivacy(JSON.parse(savedPrivacy));
+    }
+    if (savedShowBalance) {
+      setShowBalance(JSON.parse(savedShowBalance));
+    }
+  }, []);
+
+  const savePreferences = async () => {
+    setIsSaving(true);
+    try {
+      // Save to localStorage (in production, this would be an API call)
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+      localStorage.setItem('privacy', JSON.stringify(privacy));
+      localStorage.setItem('showBalance', JSON.stringify(showBalance));
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      alert('Settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      alert('Failed to save settings. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const budgetCategories = [
     { name: 'Food & Dining', budget: 600, spent: 520, color: 'bg-orange-500' },
@@ -145,7 +183,10 @@ export function Settings() {
                 </p>
               </div>
               <button
-                onClick={() => setNotifications(prev => ({ ...prev, [key]: !value }))}
+                onClick={() => {
+                  setNotifications(prev => ({ ...prev, [key]: !value }));
+                  savePreferences();
+                }}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                   value ? 'bg-blue-600' : 'bg-gray-200'
                 }`}
@@ -158,6 +199,15 @@ export function Settings() {
               </button>
             </div>
           ))}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <button
+              onClick={savePreferences}
+              disabled={isSaving}
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Notification Settings'}
+            </button>
+          </div>
         </div>
       </div>
 

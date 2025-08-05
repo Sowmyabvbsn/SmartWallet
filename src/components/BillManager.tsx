@@ -9,6 +9,16 @@ export function BillManager() {
   const [reminders, setReminders] = useState<BillReminder[]>([]);
   const [showAddBill, setShowAddBill] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [newBill, setNewBill] = useState({
+    name: '',
+    amount: '',
+    dueDate: '',
+    category: 'Utilities',
+    isRecurring: false,
+    frequency: 'monthly' as const,
+    paymentMethod: '',
+    notes: ''
+  });
 
   useEffect(() => {
     loadBillsData();
@@ -37,6 +47,45 @@ export function BillManager() {
     await billReminderService.setupNotifications();
     if (user) {
       billReminderService.scheduleReminders(user.id);
+    }
+  };
+
+  const handleAddBill = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !newBill.name || !newBill.amount || !newBill.dueDate) return;
+    
+    const bill: Bill = {
+      id: `bill_${Date.now()}`,
+      name: newBill.name,
+      amount: parseFloat(newBill.amount),
+      dueDate: newBill.dueDate,
+      category: newBill.category,
+      isRecurring: newBill.isRecurring,
+      frequency: newBill.isRecurring ? newBill.frequency : undefined,
+      isPaid: false,
+      paymentMethod: newBill.paymentMethod || undefined,
+      notes: newBill.notes || undefined,
+      userId: user.id
+    };
+    
+    try {
+      await billReminderService.addBill(bill);
+      setBills(prev => [...prev, bill]);
+      setNewBill({
+        name: '',
+        amount: '',
+        dueDate: '',
+        category: 'Utilities',
+        isRecurring: false,
+        frequency: 'monthly',
+        paymentMethod: '',
+        notes: ''
+      });
+      setShowAddBill(false);
+      loadBillsData(); // Refresh data
+    } catch (error) {
+      console.error('Failed to add bill:', error);
+      alert('Failed to add bill. Please try again.');
     }
   };
 
@@ -234,13 +283,16 @@ export function BillManager() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Bill</h3>
-            <form className="space-y-4">
+            <form onSubmit={handleAddBill} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Bill Name</label>
                 <input
                   type="text"
+                  value={newBill.name}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, name: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., Electric Bill"
+                  required
                 />
               </div>
               
@@ -249,8 +301,11 @@ export function BillManager() {
                 <input
                   type="number"
                   step="0.01"
+                  value={newBill.amount}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, amount: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="0.00"
+                  required
                 />
               </div>
               
@@ -258,13 +313,20 @@ export function BillManager() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
                 <input
                   type="date"
+                  value={newBill.dueDate}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, dueDate: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select 
+                  value={newBill.category}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, category: e.target.value }))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
                   <option value="Utilities">Utilities</option>
                   <option value="Insurance">Insurance</option>
                   <option value="Entertainment">Entertainment</option>
@@ -273,9 +335,52 @@ export function BillManager() {
                 </select>
               </div>
               
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method (Optional)</label>
+                <input
+                  type="text"
+                  value={newBill.paymentMethod}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, paymentMethod: e.target.value }))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="e.g., Auto-pay, Credit Card"
+                />
+              </div>
+              
               <div className="flex items-center space-x-2">
-                <input type="checkbox" id="recurring" className="rounded" />
+                <input 
+                  type="checkbox" 
+                  id="recurring" 
+                  checked={newBill.isRecurring}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, isRecurring: e.target.checked }))}
+                  className="rounded" 
+                />
                 <label htmlFor="recurring" className="text-sm text-gray-700">Recurring bill</label>
+              </div>
+              
+              {newBill.isRecurring && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                  <select 
+                    value={newBill.frequency}
+                    onChange={(e) => setNewBill(prev => ({ ...prev, frequency: e.target.value as any }))}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </div>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                <textarea
+                  value={newBill.notes}
+                  onChange={(e) => setNewBill(prev => ({ ...prev, notes: e.target.value }))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={2}
+                  placeholder="Additional notes..."
+                />
               </div>
               
               <div className="flex space-x-3 pt-4">

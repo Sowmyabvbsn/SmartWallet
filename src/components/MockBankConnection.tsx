@@ -14,6 +14,7 @@ export function MockBankConnection({ onSuccess }: MockBankConnectionProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     loadAccounts();
@@ -60,6 +61,20 @@ export function MockBankConnection({ onSuccess }: MockBankConnectionProps) {
     }
   };
 
+  const handleSyncTransactions = async () => {
+    setSyncing(true);
+    try {
+      const newTransactions = await mockBankService.syncTransactions();
+      console.log('Synced transactions:', newTransactions);
+      alert(`Synced ${newTransactions.length} new transactions!`);
+    } catch (error) {
+      console.error('Sync failed:', error);
+      alert('Failed to sync transactions. Please try again.');
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const getAccountIcon = (type: string) => {
     switch (type) {
       case 'checking':
@@ -99,7 +114,16 @@ export function MockBankConnection({ onSuccess }: MockBankConnectionProps) {
       {/* Connected Accounts */}
       {connectedAccounts.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Connected Accounts</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Connected Accounts</h3>
+            <button
+              onClick={handleSyncTransactions}
+              disabled={syncing}
+              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+            >
+              {syncing ? 'Syncing...' : 'Sync Transactions'}
+            </button>
+          </div>
           <div className="space-y-3">
             {connectedAccounts.map((account) => (
               <div key={account.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-green-50">

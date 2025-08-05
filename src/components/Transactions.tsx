@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { format } from 'date-fns';
 import { Search, Filter, Calendar, ChevronDown, Receipt } from 'lucide-react';
@@ -8,81 +8,109 @@ export function Transactions() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPeriod, setSelectedPeriod] = useState('this-month');
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const transactions = [
-    {
-      id: 1,
-      merchant: 'Target Store #1234',
-      amount: 87.43,
-      category: 'Shopping',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      time: '14:32',
-      paymentMethod: 'Credit Card •••• 4521',
-      status: 'completed',
-      hasReceipt: true,
-      items: ['Organic Milk', 'Bread', 'Coffee Pods', '+4 more']
-    },
-    {
-      id: 2,
-      merchant: 'Starbucks Coffee',
-      amount: 5.85,
-      category: 'Food & Dining',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      time: '08:15',
-      paymentMethod: 'Debit Card •••• 1234',
-      status: 'completed',
-      hasReceipt: false,
-      items: ['Grande Latte', 'Blueberry Muffin']
-    },
-    {
-      id: 3,
-      merchant: 'Shell Gas Station',
-      amount: 45.20,
-      category: 'Transportation',
-      date: format(new Date(Date.now() - 86400000), 'yyyy-MM-dd'),
-      time: '18:45',
-      paymentMethod: 'Credit Card •••• 4521',
-      status: 'completed',
-      hasReceipt: true,
-      items: ['Fuel - Regular']
-    },
-    {
-      id: 4,
-      merchant: 'Amazon',
-      amount: 89.99,
-      category: 'Shopping',
-      date: format(new Date(Date.now() - 172800000), 'yyyy-MM-dd'),
-      time: '11:22',
-      paymentMethod: 'Credit Card •••• 4521',
-      status: 'completed',
-      hasReceipt: false,
-      items: ['Wireless Headphones']
-    },
-    {
-      id: 5,
-      merchant: 'Electric Company',
-      amount: 120.45,
-      category: 'Utilities',
-      date: format(new Date(Date.now() - 259200000), 'yyyy-MM-dd'),
-      time: '09:00',
-      paymentMethod: 'Bank Transfer',
-      status: 'completed',
-      hasReceipt: true,
-      items: ['Monthly Electric Bill']
-    },
-    {
-      id: 6,
-      merchant: 'Netflix',
-      amount: 15.99,
-      category: 'Entertainment',
-      date: format(new Date(Date.now() - 432000000), 'yyyy-MM-dd'),
-      time: '00:01',
-      paymentMethod: 'Credit Card •••• 4521',
-      status: 'completed',
-      hasReceipt: false,
-      items: ['Monthly Subscription']
+  useEffect(() => {
+    loadTransactions();
+  }, [user]);
+
+  const loadTransactions = async () => {
+    if (!user) return;
+    
+    try {
+      // Load transactions from localStorage (in production, this would be an API call)
+      const stored = localStorage.getItem(`transactions_${user.id}`);
+      const userTransactions = stored ? JSON.parse(stored) : [];
+      
+      // Merge with default mock transactions
+      const mockTransactions = [
+        {
+          id: 1,
+          merchant: 'Target Store #1234',
+          amount: 87.43,
+          category: 'Shopping',
+          date: format(new Date(), 'yyyy-MM-dd'),
+          time: '14:32',
+          paymentMethod: 'Credit Card •••• 4521',
+          status: 'completed',
+          hasReceipt: true,
+          items: ['Organic Milk', 'Bread', 'Coffee Pods', '+4 more']
+        },
+        {
+          id: 2,
+          merchant: 'Starbucks Coffee',
+          amount: 5.85,
+          category: 'Food & Dining',
+          date: format(new Date(), 'yyyy-MM-dd'),
+          time: '08:15',
+          paymentMethod: 'Debit Card •••• 1234',
+          status: 'completed',
+          hasReceipt: false,
+          items: ['Grande Latte', 'Blueberry Muffin']
+        },
+        {
+          id: 3,
+          merchant: 'Shell Gas Station',
+          amount: 45.20,
+          category: 'Transportation',
+          date: format(new Date(Date.now() - 86400000), 'yyyy-MM-dd'),
+          time: '18:45',
+          paymentMethod: 'Credit Card •••• 4521',
+          status: 'completed',
+          hasReceipt: true,
+          items: ['Fuel - Regular']
+        },
+        {
+          id: 4,
+          merchant: 'Amazon',
+          amount: 89.99,
+          category: 'Shopping',
+          date: format(new Date(Date.now() - 172800000), 'yyyy-MM-dd'),
+          time: '11:22',
+          paymentMethod: 'Credit Card •••• 4521',
+          status: 'completed',
+          hasReceipt: false,
+          items: ['Wireless Headphones']
+        },
+        {
+          id: 5,
+          merchant: 'Electric Company',
+          amount: 120.45,
+          category: 'Utilities',
+          date: format(new Date(Date.now() - 259200000), 'yyyy-MM-dd'),
+          time: '09:00',
+          paymentMethod: 'Bank Transfer',
+          status: 'completed',
+          hasReceipt: true,
+          items: ['Monthly Electric Bill']
+        },
+        {
+          id: 6,
+          merchant: 'Netflix',
+          amount: 15.99,
+          category: 'Entertainment',
+          date: format(new Date(Date.now() - 432000000), 'yyyy-MM-dd'),
+          time: '00:01',
+          paymentMethod: 'Credit Card •••• 4521',
+          status: 'completed',
+          hasReceipt: false,
+          items: ['Monthly Subscription']
+        }
+      ];
+      
+      // Combine and sort by date (newest first)
+      const allTransactions = [...userTransactions, ...mockTransactions]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      setTransactions(allTransactions);
+    } catch (error) {
+      console.error('Error loading transactions:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
 
   const categories = [
     'all',
@@ -97,7 +125,7 @@ export function Transactions() {
 
   const filteredTransactions = transactions.filter(transaction => {
     const matchesSearch = transaction.merchant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.items.some(item => item.toLowerCase().includes(searchTerm.toLowerCase()));
+                         transaction.items.some((item: string) => item.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'all' || transaction.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -115,6 +143,14 @@ export function Transactions() {
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
@@ -127,7 +163,7 @@ export function Transactions() {
                 {filteredTransactions.length} transactions
               </span>
               <span className="text-lg font-semibold text-gray-900">
-                -$1,364.91
+                -${filteredTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
               </span>
             </div>
           </div>

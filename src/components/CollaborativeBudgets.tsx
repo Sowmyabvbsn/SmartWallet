@@ -33,6 +33,18 @@ export function CollaborativeBudgets() {
   const [showCreateBudget, setShowCreateBudget] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<string | null>(null);
+  const [newBudget, setNewBudget] = useState({
+    name: '',
+    description: '',
+    totalBudget: ''
+  });
+  const [inviteForm, setInviteForm] = useState({
+    email: '',
+    role: 'member' as 'member' | 'admin',
+    message: ''
+  });
+  const [isCreating, setIsCreating] = useState(false);
+  const [isSendingInvite, setIsSendingInvite] = useState(false);
 
   // Mock shared budgets data
   const sharedBudgets: SharedBudget[] = [
@@ -119,6 +131,75 @@ export function CollaborativeBudgets() {
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleCreateBudget = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !newBudget.name || !newBudget.totalBudget) return;
+    
+    setIsCreating(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const budget: SharedBudget = {
+        id: Date.now().toString(),
+        name: newBudget.name,
+        description: newBudget.description,
+        totalBudget: parseFloat(newBudget.totalBudget),
+        spent: 0,
+        members: [{
+          id: user.id,
+          name: user.fullName || 'You',
+          email: user.primaryEmailAddress?.emailAddress || '',
+          role: 'owner',
+          contribution: 100
+        }],
+        categories: [],
+        createdAt: new Date().toISOString(),
+        isOwner: true
+      };
+      
+      // In production, this would be saved to a database
+      console.log('Created budget:', budget);
+      
+      setNewBudget({ name: '', description: '', totalBudget: '' });
+      setShowCreateBudget(false);
+      alert('Budget created successfully!');
+    } catch (error) {
+      console.error('Failed to create budget:', error);
+      alert('Failed to create budget. Please try again.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleSendInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inviteForm.email || !selectedBudget) return;
+    
+    setIsSendingInvite(true);
+    try {
+      // Simulate sending invite
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Sending invite:', {
+        budgetId: selectedBudget,
+        email: inviteForm.email,
+        role: inviteForm.role,
+        message: inviteForm.message
+      });
+      
+      setInviteForm({ email: '', role: 'member', message: '' });
+      setShowInviteModal(false);
+      setSelectedBudget(null);
+      alert('Invitation sent successfully!');
+    } catch (error) {
+      console.error('Failed to send invite:', error);
+      alert('Failed to send invitation. Please try again.');
+    } finally {
+      setIsSendingInvite(false);
     }
   };
 
@@ -258,19 +339,24 @@ export function CollaborativeBudgets() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Create Shared Budget</h3>
-            <form className="space-y-4">
+            <form onSubmit={handleCreateBudget} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Budget Name</label>
                 <input
                   type="text"
+                  value={newBudget.name}
+                  onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., Family Budget 2024"
+                  required
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea
+                  value={newBudget.description}
+                  onChange={(e) => setNewBudget(prev => ({ ...prev, description: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
                   placeholder="Brief description of this budget..."
@@ -282,17 +368,21 @@ export function CollaborativeBudgets() {
                 <input
                   type="number"
                   step="0.01"
+                  value={newBudget.totalBudget}
+                  onChange={(e) => setNewBudget(prev => ({ ...prev, totalBudget: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="5000.00"
+                  required
                 />
               </div>
               
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors"
+                  disabled={isCreating}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-2 rounded-lg transition-colors"
                 >
-                  Create Budget
+                  {isCreating ? 'Creating...' : 'Create Budget'}
                 </button>
                 <button
                   type="button"
@@ -312,19 +402,26 @@ export function CollaborativeBudgets() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Invite Members</h3>
-            <form className="space-y-4">
+            <form onSubmit={handleSendInvite} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                 <input
                   type="email"
+                  value={inviteForm.email}
+                  onChange={(e) => setInviteForm(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="friend@example.com"
+                  required
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select 
+                  value={inviteForm.role}
+                  onChange={(e) => setInviteForm(prev => ({ ...prev, role: e.target.value as any }))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
                   <option value="member">Member</option>
                   <option value="admin">Admin</option>
                 </select>
@@ -333,6 +430,8 @@ export function CollaborativeBudgets() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Personal Message (Optional)</label>
                 <textarea
+                  value={inviteForm.message}
+                  onChange={(e) => setInviteForm(prev => ({ ...prev, message: e.target.value }))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
                   placeholder="Join our family budget to track expenses together..."
@@ -342,10 +441,11 @@ export function CollaborativeBudgets() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                  disabled={isSendingInvite}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-2 rounded-lg transition-colors flex items-center justify-center space-x-2"
                 >
                   <UserPlus className="h-4 w-4" />
-                  <span>Send Invite</span>
+                  <span>{isSendingInvite ? 'Sending...' : 'Send Invite'}</span>
                 </button>
                 <button
                   type="button"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { 
   TrendingUp, 
@@ -20,17 +20,45 @@ interface DashboardProps {
 
 export function Dashboard({ onScanReceipt }: DashboardProps) {
   const { user } = useUser();
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadRecentTransactions();
+  }, [user]);
+
+  const loadRecentTransactions = async () => {
+    if (!user) return;
+    
+    try {
+      // Load user's transactions from localStorage
+      const stored = localStorage.getItem(`transactions_${user.id}`);
+      const userTransactions = stored ? JSON.parse(stored) : [];
+      
+      // Combine with mock data and get recent ones
+      const mockTransactions = [
+        { id: 1, merchant: 'Starbucks', amount: 5.85, category: 'Food & Dining', time: '2 hours ago', icon: Coffee },
+        { id: 2, merchant: 'Shell Gas Station', amount: 45.20, category: 'Transportation', time: '1 day ago', icon: Car },
+        { id: 3, merchant: 'Amazon', amount: 89.99, category: 'Shopping', time: '2 days ago', icon: ShoppingBag },
+        { id: 4, merchant: 'Electric Company', amount: 120.45, category: 'Utilities', time: '3 days ago', icon: Home },
+      ];
+      
+      const allTransactions = [...userTransactions, ...mockTransactions]
+        .sort((a, b) => new Date(b.date || Date.now()).getTime() - new Date(a.date || Date.now()).getTime())
+        .slice(0, 4);
+      
+      setTransactions(allTransactions);
+    } catch (error) {
+      console.error('Error loading transactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const financialScore = 78;
   const monthlySpending = 2840.50;
   const budgetRemaining = 1159.50;
   const savingsGoal = 85;
-
-  const recentTransactions = [
-    { id: 1, merchant: 'Starbucks', amount: 5.85, category: 'Food & Dining', time: '2 hours ago', icon: Coffee },
-    { id: 2, merchant: 'Shell Gas Station', amount: 45.20, category: 'Transportation', time: '1 day ago', icon: Car },
-    { id: 3, merchant: 'Amazon', amount: 89.99, category: 'Shopping', time: '2 days ago', icon: ShoppingBag },
-    { id: 4, merchant: 'Electric Company', amount: 120.45, category: 'Utilities', time: '3 days ago', icon: Home },
-  ];
 
   const aiInsights = [
     {
@@ -168,11 +196,19 @@ export function Dashboard({ onScanReceipt }: DashboardProps) {
           </button>
         </div>
         <div className="divide-y divide-gray-100">
-          {recentTransactions.map((transaction) => (
+          {loading ? (
+            <div className="p-6 text-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+            </div>
+          ) : transactions.map((transaction) => (
             <div key={transaction.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center space-x-4">
                 <div className="bg-gray-100 p-2 rounded-lg">
-                  <transaction.icon className="h-5 w-5 text-gray-600" />
+                  {transaction.icon ? (
+                    <transaction.icon className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ShoppingBag className="h-5 w-5 text-gray-600" />
+                  )}
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">{transaction.merchant}</h4>

@@ -93,8 +93,30 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
   };
 
   const handleSave = () => {
-    // Save to transactions
-    alert('Receipt saved successfully!');
+    if (!scannedData || !user) return;
+    
+    // Create transaction from scanned data
+    const transaction = {
+      id: Date.now().toString(),
+      merchant: scannedData.merchant,
+      amount: scannedData.total,
+      category: scannedData.items[0]?.category || 'Other',
+      date: scannedData.date,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      paymentMethod: scannedData.paymentMethod,
+      status: 'completed' as const,
+      hasReceipt: true,
+      items: scannedData.items.map((item: any) => item.name),
+      userId: user.id
+    };
+    
+    // Save to localStorage (in production, this would be an API call)
+    const existingTransactions = JSON.parse(localStorage.getItem(`transactions_${user.id}`) || '[]');
+    const updatedTransactions = [transaction, ...existingTransactions];
+    localStorage.setItem(`transactions_${user.id}`, JSON.stringify(updatedTransactions));
+    
+    // Show success message
+    alert('Receipt saved successfully! Transaction added to your records.');
     onClose();
   };
 

@@ -123,8 +123,13 @@ class BillReminderService {
   }
 
   async markBillAsPaid(billId: string): Promise<void> {
-    // Mark bill as paid
-    console.log(`Marking bill ${billId} as paid`);
+    // Get all bills and update the specific one
+    const allBills = JSON.parse(localStorage.getItem('bills_all') || '[]');
+    const updatedBills = allBills.map((bill: Bill) => 
+      bill.id === billId ? { ...bill, isPaid: true } : bill
+    );
+    localStorage.setItem('bills_all', JSON.stringify(updatedBills));
+    console.log(`Marked bill ${billId} as paid`);
   }
 
   async addBill(bill: Omit<Bill, 'id'>): Promise<Bill> {
@@ -133,8 +138,12 @@ class BillReminderService {
       id: `bill_${Date.now()}`
     };
     
-    // Save bill
-    console.log('Adding new bill:', newBill);
+    // Save bill to localStorage (in production, this would be an API call)
+    const existingBills = await this.getBills(bill.userId);
+    const updatedBills = [...existingBills, newBill];
+    localStorage.setItem(`bills_${bill.userId}`, JSON.stringify(updatedBills));
+    
+    console.log('Added new bill:', newBill);
     return newBill;
   }
 

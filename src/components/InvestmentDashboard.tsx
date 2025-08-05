@@ -9,9 +9,17 @@ export function InvestmentDashboard() {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadPortfolioData();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      refreshPortfolioData();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [user]);
 
   const loadPortfolioData = async () => {
@@ -27,6 +35,23 @@ export function InvestmentDashboard() {
       console.error('Error loading portfolio:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const refreshPortfolioData = async () => {
+    if (!user) return;
+    
+    setRefreshing(true);
+    try {
+      const portfolioData = await investmentService.getPortfolio(user.id);
+      const insightsData = await investmentService.getInvestmentInsights(portfolioData);
+      
+      setPortfolio(portfolioData);
+      setInsights(insightsData);
+    } catch (error) {
+      console.error('Error refreshing portfolio:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -61,7 +86,26 @@ export function InvestmentDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Portfolio Overview */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Investment Portfolio</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Investment Portfolio</h2>
+          <button
+            onClick={refreshPortfolioData}
+            disabled={refreshing}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors flex items-center space-x-1"
+          >
+            {refreshing ? (
+              <>
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                <span>Refreshing...</span>
+              </>
+            ) : (
+              <>
+                <TrendingUp className="h-3 w-3" />
+                <span>Refresh</span>
+              </>
+            )}
+          </button>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">

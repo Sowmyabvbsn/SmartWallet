@@ -9,9 +9,19 @@ export function CurrencyConverter() {
   const [amount, setAmount] = useState<string>('100');
   const [conversion, setConversion] = useState<CurrencyConversion | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   useEffect(() => {
     loadCurrencies();
+    // Update rates every 5 minutes
+    const interval = setInterval(() => {
+      setLastUpdated(new Date());
+      if (amount && parseFloat(amount) > 0) {
+        handleConvert();
+      }
+    }, 5 * 60 * 1000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -146,7 +156,7 @@ export function CurrencyConverter() {
                   1 {conversion.from} = {conversion.rate.toFixed(4)} {conversion.to}
                 </p>
                 <p className="text-xs text-blue-600 mt-2">
-                  Last updated: {new Date(conversion.timestamp).toLocaleString()}
+                  Last updated: {lastUpdated.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -178,10 +188,13 @@ export function CurrencyConverter() {
               Exchange Rate Information
             </h4>
             <div className="text-sm text-gray-600 space-y-2">
-              <p>• Exchange rates are updated in real-time</p>
+              <p>• Exchange rates are updated every 5 minutes</p>
               <p>• Rates may vary slightly from actual bank rates</p>
               <p>• For large transactions, consult with your financial institution</p>
               <p>• Historical data and trends available for premium users</p>
+              <p className="text-xs text-gray-500 mt-2">
+                Last rate update: {lastUpdated.toLocaleTimeString()}
+              </p>
             </div>
           </div>
         </div>

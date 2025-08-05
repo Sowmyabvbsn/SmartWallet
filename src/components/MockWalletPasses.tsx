@@ -9,6 +9,7 @@ export function MockWalletPasses() {
   const [isCreating, setIsCreating] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createType, setCreateType] = useState<'loyalty' | 'membership' | 'event'>('loyalty');
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     loadPasses();
@@ -42,7 +43,31 @@ export function MockWalletPasses() {
     }
   };
 
+  const validateForm = (formData: FormData, type: string): boolean => {
+    const errors: { [key: string]: string } = {};
+    
+    if (type === 'membership') {
+      if (!formData.get('title')) errors.title = 'Organization name is required';
+      if (!formData.get('subtitle')) errors.subtitle = 'Membership type is required';
+      if (!formData.get('memberNumber')) errors.memberNumber = 'Member number is required';
+      if (!formData.get('expiryDate')) errors.expiryDate = 'Expiry date is required';
+    } else if (type === 'event') {
+      if (!formData.get('name')) errors.name = 'Event name is required';
+      if (!formData.get('venue')) errors.venue = 'Venue is required';
+      if (!formData.get('date')) errors.date = 'Date is required';
+      if (!formData.get('time')) errors.time = 'Time is required';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleCreateMembershipPass = async (details: any) => {
+    if (!details.title || !details.subtitle || !details.memberNumber || !details.expiryDate) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     setIsCreating(true);
     try {
       const pass = await mockWalletService.createMembershipPass(details);
@@ -56,6 +81,11 @@ export function MockWalletPasses() {
   };
 
   const handleCreateEventTicket = async (details: any) => {
+    if (!details.name || !details.venue || !details.date || !details.time) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     setIsCreating(true);
     try {
       const pass = await mockWalletService.createEventTicket(details);
@@ -237,6 +267,7 @@ export function MockWalletPasses() {
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target as HTMLFormElement);
+                  if (!validateForm(formData, 'membership')) return;
                   handleCreateMembershipPass({
                     title: formData.get('title'),
                     subtitle: formData.get('subtitle'),
@@ -248,27 +279,39 @@ export function MockWalletPasses() {
                     <input
                       name="title"
                       placeholder="Organization Name"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.title ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.title && <p className="text-red-500 text-xs mt-1">{formErrors.title}</p>}
                     <input
                       name="subtitle"
                       placeholder="Membership Type"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.subtitle ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.subtitle && <p className="text-red-500 text-xs mt-1">{formErrors.subtitle}</p>}
                     <input
                       name="memberNumber"
                       placeholder="Member Number"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.memberNumber ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.memberNumber && <p className="text-red-500 text-xs mt-1">{formErrors.memberNumber}</p>}
                     <input
                       name="expiryDate"
                       type="date"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.expiryDate ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.expiryDate && <p className="text-red-500 text-xs mt-1">{formErrors.expiryDate}</p>}
                     <button
                       type="submit"
                       disabled={isCreating}
@@ -284,6 +327,7 @@ export function MockWalletPasses() {
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target as HTMLFormElement);
+                  if (!validateForm(formData, 'event')) return;
                   handleCreateEventTicket({
                     name: formData.get('name'),
                     venue: formData.get('venue'),
@@ -296,27 +340,39 @@ export function MockWalletPasses() {
                     <input
                       name="name"
                       placeholder="Event Name"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.name ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                     <input
                       name="venue"
                       placeholder="Venue"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.venue ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.venue && <p className="text-red-500 text-xs mt-1">{formErrors.venue}</p>}
                     <input
                       name="date"
                       type="date"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.date ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.date && <p className="text-red-500 text-xs mt-1">{formErrors.date}</p>}
                     <input
                       name="time"
                       type="time"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        formErrors.time ? 'border-red-300' : 'border-gray-300'
+                      }`}
                       required
                     />
+                    {formErrors.time && <p className="text-red-500 text-xs mt-1">{formErrors.time}</p>}
                     <input
                       name="seat"
                       placeholder="Seat (optional)"
