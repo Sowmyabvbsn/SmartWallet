@@ -30,7 +30,7 @@ class WeatherService {
   private baseUrl = 'https://api.openweathermap.org/data/2.5';
 
   async getCurrentWeather(city: string = 'New York'): Promise<WeatherData> {
-    if (!this.apiKey) {
+    if (!this.apiKey || city === 'Visakhapatnam') {
       return this.getMockWeatherData();
     }
 
@@ -58,7 +58,7 @@ class WeatherService {
       console.warn('Weather API failed, using mock data:', error);
     }
 
-    return this.getMockWeatherData();
+    return this.getMockWeatherDataForLocation(city);
   }
 
   private processForecastData(forecastList: any[]): WeatherForecast[] {
@@ -89,6 +89,37 @@ class WeatherService {
     }));
   }
 
+  private getMockWeatherDataForLocation(city: string): WeatherData {
+    const conditions = ['Clear', 'Cloudy', 'Rain', 'Thunderstorm'];
+    const icons = ['01d', '02d', '10d', '11d'];
+    
+    const randomCondition = Math.floor(Math.random() * conditions.length);
+    
+    return {
+      location: city.includes('Visakhapatnam') ? 'Visakhapatnam, India' : city,
+      temperature: Math.round(Math.random() * 15 + 25), // 25-40°C for India
+      condition: conditions[randomCondition],
+      humidity: Math.round(Math.random() * 30 + 60), // 60-90% for coastal India
+      windSpeed: Math.round(Math.random() * 15 + 10), // 10-25 km/h
+      icon: icons[randomCondition],
+      forecast: this.generateForecastForLocation(city)
+    };
+  }
+
+  private generateForecastForLocation(city: string) {
+    const conditions = ['Clear', 'Cloudy', 'Rain', 'Thunderstorm'];
+    const icons = ['01d', '02d', '10d', '11d'];
+    
+    return Array.from({ length: 5 }, (_, i) => ({
+      date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      high: Math.round(Math.random() * 10 + 30), // 30-40°C
+      low: Math.round(Math.random() * 8 + 22), // 22-30°C
+      condition: conditions[Math.floor(Math.random() * conditions.length)],
+      icon: icons[Math.floor(Math.random() * icons.length)],
+      precipitationChance: Math.round(Math.random() * 60 + 20) // 20-80% for monsoon region
+    }));
+  }
+
   private getMockWeatherData(): WeatherData {
     const conditions = ['Clear', 'Cloudy', 'Rain', 'Snow', 'Thunderstorm'];
     const icons = ['01d', '02d', '10d', '13d', '11d'];
@@ -96,7 +127,7 @@ class WeatherService {
     const randomCondition = Math.floor(Math.random() * conditions.length);
     
     return {
-      location: 'New York',
+      location: 'Visakhapatnam, India',
       temperature: Math.round(Math.random() * 30 + 5), // 5-35°C
       condition: conditions[randomCondition],
       humidity: Math.round(Math.random() * 40 + 40), // 40-80%
@@ -105,7 +136,7 @@ class WeatherService {
       forecast: Array.from({ length: 5 }, (_, i) => ({
         date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         high: Math.round(Math.random() * 25 + 10),
-        low: Math.round(Math.random() * 15 + 0),
+        low: Math.round(Math.random() * 15 + 5),
         condition: conditions[Math.floor(Math.random() * conditions.length)],
         icon: icons[Math.floor(Math.random() * icons.length)],
         precipitationChance: Math.round(Math.random() * 100)

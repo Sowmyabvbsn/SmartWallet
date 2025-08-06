@@ -62,7 +62,7 @@ export function EnhancedDashboard({ onScanReceipt }: EnhancedDashboardProps) {
       setTransactions(allTransactions);
 
       // Load weather data and insights
-      const weatherData = await weatherService.getCurrentWeather();
+      const weatherData = await weatherService.getCurrentWeather('Visakhapatnam, India');
       setWeather(weatherData);
       
       const insights = weatherService.generateSpendingInsights(weatherData, allTransactions);
