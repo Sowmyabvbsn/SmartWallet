@@ -48,7 +48,20 @@ export function MarketInsights() {
   const refreshMarketData = async () => {
     setRefreshing(true);
     try {
-      await loadMarketData();
+      // Force refresh by clearing cache and getting fresh data
+      stockService.clearCache();
+      
+      const [overview, quotes, news, sentiment] = await Promise.all([
+        stockService.forceRefreshMarketData(),
+        stockService.getMultipleQuotes(defaultWatchlist),
+        newsService.getFinancialNews('business'),
+        newsService.getMarketSentiment()
+      ]);
+
+      setMarketOverview(overview);
+      setWatchlist(quotes);
+      setMarketNews(news);
+      setMarketSentiment(sentiment);
     } catch (error) {
       console.error('Error refreshing market data:', error);
     } finally {

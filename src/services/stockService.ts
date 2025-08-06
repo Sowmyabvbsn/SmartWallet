@@ -40,7 +40,7 @@ class StockService {
   private apiKey = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
   private baseUrl = 'https://www.alphavantage.co/query';
   private cache: { [key: string]: any } = {};
-  private cacheExpiry = 5 * 60 * 1000; // 5 minutes
+  private cacheExpiry = 2 * 60 * 1000; // 2 minutes for more frequent updates
 
   async getStockQuote(symbol: string): Promise<StockQuote> {
     const cacheKey = `quote_${symbol}`;
@@ -156,13 +156,7 @@ class StockService {
   async getMarketOverview(): Promise<MarketOverview> {
     const cacheKey = 'market_overview';
     
-    if (this.cache[cacheKey] && 
-        Date.now() - this.cache[cacheKey].timestamp < this.cacheExpiry) {
-      return this.cache[cacheKey].data;
-    }
-
-    // For demo purposes, using mock data
-    // In production, you'd integrate with multiple APIs for comprehensive market data
+    // Always generate fresh data for market overview to ensure refresh works
     const overview = this.getMockMarketOverview();
     
     this.cache[cacheKey] = {
@@ -173,9 +167,25 @@ class StockService {
     return overview;
   }
 
+  // Method to force refresh by clearing cache
+  clearCache(): void {
+    this.cache = {};
+  }
+
+  // Method to force refresh specific data
+  async forceRefreshMarketData(): Promise<MarketOverview> {
+    // Clear market overview cache
+    delete this.cache['market_overview'];
+    
+    // Generate fresh market data
+    return await this.getMarketOverview();
+  }
+
   private getMockStockQuote(symbol: string): StockQuote {
     const basePrice = this.getBasePriceForSymbol(symbol);
-    const change = (Math.random() - 0.5) * basePrice * 0.05; // ±5% change
+    // Add timestamp to ensure different values on each call
+    const volatility = Math.sin(Date.now() / 10000) * 0.02 + (Math.random() - 0.5) * 0.03; // ±3% change with time-based component
+    const change = basePrice * volatility;
     const changePercent = (change / basePrice) * 100;
 
     return {
@@ -222,32 +232,47 @@ class StockService {
   }
 
   private getMockMarketOverview(): MarketOverview {
+    // Use current timestamp to ensure different values each time
+    const timeComponent = Math.sin(Date.now() / 100000);
+    
     return {
       indices: [
         {
           name: 'S&P 500',
           symbol: 'SPX',
-          value: 4500 + Math.random() * 200,
-          change: (Math.random() - 0.5) * 50,
-          changePercent: (Math.random() - 0.5) * 2
+          value: 4500 + (Math.random() * 200) + (timeComponent * 100),
+          change: (Math.random() - 0.5) * 50 + (timeComponent * 20),
+          changePercent: (Math.random() - 0.5) * 2 + (timeComponent * 0.5)
         },
         {
           name: 'Dow Jones',
           symbol: 'DJI',
-          value: 35000 + Math.random() * 1000,
-          change: (Math.random() - 0.5) * 300,
-          changePercent: (Math.random() - 0.5) * 1.5
+          value: 35000 + (Math.random() * 1000) + (timeComponent * 500),
+          change: (Math.random() - 0.5) * 300 + (timeComponent * 100),
+          changePercent: (Math.random() - 0.5) * 1.5 + (timeComponent * 0.3)
         },
         {
           name: 'NASDAQ',
           symbol: 'IXIC',
-          value: 14000 + Math.random() * 500,
-          change: (Math.random() - 0.5) * 100,
-          changePercent: (Math.random() - 0.5) * 2.5
+          value: 14000 + (Math.random() * 500) + (timeComponent * 250),
+          change: (Math.random() - 0.5) * 100 + (timeComponent * 50),
+          changePercent: (Math.random() - 0.5) * 2.5 + (timeComponent * 0.4)
         }
       ],
-      topGainers: ['AAPL', 'GOOGL', 'MSFT'].map(symbol => this.getMockStockQuote(symbol)),
-      topLosers: ['TSLA', 'AMZN', 'META'].map(symbol => this.getMockStockQuote(symbol)),
+      topGainers: ['AAPL', 'GOOGL', 'MSFT'].map(symbol => {
+        const quote = this.getMockStockQuote(symbol);
+        // Ensure gainers have positive changes
+        quote.change = Math.abs(quote.change);
+        quote.changePercent = Math.abs(quote.changePercent);
+        return quote;
+      }),
+      topLosers: ['TSLA', 'AMZN', 'META'].map(symbol => {
+        const quote = this.getMockStockQuote(symbol);
+        // Ensure losers have negative changes
+        quote.change = -Math.abs(quote.change);
+        quote.changePercent = -Math.abs(quote.changePercent);
+        return quote;
+      }),
       mostActive: ['NVDA', 'AMD', 'INTC'].map(symbol => this.getMockStockQuote(symbol))
     };
   }

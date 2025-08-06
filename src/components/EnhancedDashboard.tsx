@@ -72,8 +72,8 @@ export function EnhancedDashboard({ onScanReceipt }: EnhancedDashboardProps) {
       const financialNews = await newsService.getFinancialNews('business');
       setNews(financialNews.articles.slice(0, 3));
 
-      // Load market overview
-      const market = await stockService.getMarketOverview();
+      // Load market overview with fresh data
+      const market = await stockService.forceRefreshMarketData();
       setMarketOverview(market);
 
     } catch (error) {
