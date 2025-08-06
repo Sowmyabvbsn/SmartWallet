@@ -111,7 +111,7 @@ export function Dashboard({ onScanReceipt }: DashboardProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm font-medium">This Month</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900">${monthlySpending.toLocaleString()}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{monthlySpending.toLocaleString('en-IN')}</p>
               <p className="text-red-600 text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +12% vs last month
@@ -127,7 +127,7 @@ export function Dashboard({ onScanReceipt }: DashboardProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm font-medium">Budget Remaining</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900">${budgetRemaining.toLocaleString()}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{budgetRemaining.toLocaleString('en-IN')}</p>
               <p className="text-green-600 text-sm flex items-center mt-1">
                 <TrendingDown className="h-3 w-3 mr-1" />
                 29% of budget left
@@ -146,7 +146,7 @@ export function Dashboard({ onScanReceipt }: DashboardProps) {
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{savingsGoal}%</p>
               <p className="text-blue-600 text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                On track for $500
+                On track for ₹40,000
               </p>
             </div>
             <div className="relative w-12 h-12 sm:w-16 sm:h-16">
@@ -227,7 +227,7 @@ export function Dashboard({ onScanReceipt }: DashboardProps) {
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-gray-900 text-sm sm:text-base">-${transaction.amount}</p>
+                <p className="font-bold text-gray-900 text-sm sm:text-base">-₹{transaction.amount.toLocaleString('en-IN')}</p>
                 <p className="text-xs sm:text-sm text-gray-500">{transaction.time}</p>
               </div>
             </div>

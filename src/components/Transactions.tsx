@@ -163,7 +163,7 @@ export function Transactions() {
                 {filteredTransactions.length} transactions
               </span>
               <span className="text-base sm:text-lg font-semibold text-gray-900">
-                -${filteredTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
+                -₹{filteredTransactions.reduce((sum, t) => sum + t.amount, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>
@@ -249,7 +249,7 @@ export function Transactions() {
 
                 <div className="text-right ml-2 sm:ml-4">
                   <p className="text-base sm:text-lg font-semibold text-gray-900">
-                    -${transaction.amount.toFixed(2)}
+                    -₹{transaction.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </p>
                   <p className={`text-xs font-medium ${
                     transaction.status === 'completed' ? 'text-green-600' : 'text-orange-600'

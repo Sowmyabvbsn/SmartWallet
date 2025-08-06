@@ -16,20 +16,11 @@ export interface CurrencyConversion {
 
 class CurrencyService {
   private currencies: Currency[] = [
-    { code: 'USD', name: 'US Dollar', symbol: '$', rate: 1.0 },
-    { code: 'EUR', name: 'Euro', symbol: '€', rate: 0.85 },
-    { code: 'GBP', name: 'British Pound', symbol: '£', rate: 0.73 },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥', rate: 110.0 },
-    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', rate: 1.25 },
-    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', rate: 1.35 },
-    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', rate: 0.92 },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', rate: 6.45 },
-    { code: 'INR', name: 'Indian Rupee', symbol: '₹', rate: 74.5 },
-    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', rate: 5.2 }
+    { code: 'INR', name: 'Indian Rupee', symbol: '₹', rate: 1.0 }
   ];
 
-  private baseCurrency: string = 'USD';
-  private userCurrency: string = 'USD';
+  private baseCurrency: string = 'INR';
+  private userCurrency: string = 'INR';
 
   async getSupportedCurrencies(): Promise<Currency[]> {
     return this.currencies;
@@ -50,9 +41,8 @@ class CurrencyService {
   async convertCurrency(amount: number, fromCurrency: string, toCurrency: string): Promise<CurrencyConversion> {
     const rates = await this.getExchangeRates();
     
-    // Convert to USD first, then to target currency
-    const usdAmount = amount / rates[fromCurrency];
-    const convertedAmount = usdAmount * rates[toCurrency];
+    // Since we only support INR, conversion is 1:1
+    const convertedAmount = amount;
     const rate = rates[toCurrency] / rates[fromCurrency];
     
     return {
@@ -66,8 +56,49 @@ class CurrencyService {
   }
 
   formatCurrency(amount: number, currencyCode: string): string {
-    const currency = this.currencies.find(c => c.code === currencyCode);
-    if (!currency) return `${amount.toFixed(2)}`;
+    // Always format as INR
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  }
+
+  formatCurrencySimple(amount: number): string {
+    return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  // Helper method to format large amounts in Indian style (lakhs, crores)
+  formatIndianCurrency(amount: number): string {
+    if (amount >= 10000000) { // 1 crore
+      return `₹${(amount / 10000000).toFixed(2)} Cr`;
+    } else if (amount >= 100000) { // 1 lakh
+      return `₹${(amount / 100000).toFixed(2)} L`;
+    } else {
+      return this.formatCurrencySimple(amount);
+    }
+  }
+
+  setUserCurrency(currencyCode: string): void {
+    // Always set to INR
+    this.userCurrency = 'INR';
+    localStorage.setItem('userCurrency', 'INR');
+  }
+
+  getUserCurrency(): string {
+    return 'INR';
+  }
+
+  getCurrencySymbol(currencyCode: string): string {
+    return '₹';
+  }
+}
+
+// Add delay function that was missing
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const currencyService = new CurrencyService();
     
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

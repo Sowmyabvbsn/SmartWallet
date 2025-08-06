@@ -56,14 +56,14 @@ export const api = {
     return {
       merchant: 'Target Store #1234',
       date: new Date().toISOString().split('T')[0],
-      total: Math.round((Math.random() * 100 + 20) * 100) / 100,
-      tax: Math.round((Math.random() * 10 + 2) * 100) / 100,
-      subtotal: Math.round((Math.random() * 90 + 18) * 100) / 100,
+      total: Math.round((Math.random() * 8000 + 1600) * 100) / 100,
+      tax: Math.round((Math.random() * 800 + 160) * 100) / 100,
+      subtotal: Math.round((Math.random() * 7200 + 1440) * 100) / 100,
       items: [
-        { name: 'Organic Milk', price: 4.99, category: 'Groceries' },
-        { name: 'Bread', price: 2.50, category: 'Groceries' },
-        { name: 'Coffee Pods', price: 12.99, category: 'Groceries' },
-        { name: 'Cleaning Supplies', price: 8.99, category: 'Household' },
+        { name: 'Organic Milk', price: 399, category: 'Groceries' },
+        { name: 'Bread', price: 200, category: 'Groceries' },
+        { name: 'Coffee Pods', price: 1039, category: 'Groceries' },
+        { name: 'Cleaning Supplies', price: 719, category: 'Household' },
       ],
       paymentMethod: 'Credit Card ending in 4521',
       confidence: Math.round(Math.random() * 10 + 90),
@@ -76,8 +76,8 @@ export const api = {
     await delay(800);
     return {
       financialScore: Math.round(Math.random() * 30 + 70),
-      monthlySpending: Math.round((Math.random() * 1000 + 2000) * 100) / 100,
-      budgetRemaining: Math.round((Math.random() * 500 + 1000) * 100) / 100,
+      monthlySpending: Math.round((Math.random() * 80000 + 160000) * 100) / 100,
+      budgetRemaining: Math.round((Math.random() * 40000 + 80000) * 100) / 100,
       savingsRate: Math.round(Math.random() * 20 + 70),
       insights: [
         {

@@ -191,13 +191,13 @@ class GeminiAIService {
     return {
       merchant: 'Target Store #1234',
       date: new Date().toISOString().split('T')[0],
-      total: 87.43,
-      tax: 7.43,
-      subtotal: 80.00,
+      total: 6995,
+      tax: 595,
+      subtotal: 6400,
       items: [
-        { name: 'Organic Milk', price: 4.99, category: 'Groceries' },
-        { name: 'Bread', price: 2.50, category: 'Groceries' },
-        { name: 'Coffee Pods', price: 12.99, category: 'Groceries' }
+        { name: 'Organic Milk', price: 399, category: 'Groceries' },
+        { name: 'Bread', price: 200, category: 'Groceries' },
+        { name: 'Coffee Pods', price: 1039, category: 'Groceries' }
       ],
       paymentMethod: 'Credit Card ending in 4521',
       confidence: 85
@@ -209,13 +209,13 @@ class GeminiAIService {
       recommendations: [
         {
           category: 'Food & Dining',
-          suggested: 600,
-          current: 850,
+          suggested: 48000,
+          current: 68000,
           reasoning: 'Consider reducing dining out frequency to meet savings goals'
         }
       ],
-      savingsGoal: 500,
-      emergencyFund: 1000,
+      savingsGoal: 40000,
+      emergencyFund: 80000,
       overallAdvice: 'Focus on reducing discretionary spending to improve your financial health.'
     };
   }

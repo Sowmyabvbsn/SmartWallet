@@ -47,17 +47,17 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
         123 MAIN ST
         ANYTOWN, ST 12345
         
-        ORGANIC MILK         $4.99
-        BREAD LOAF          $2.50
-        COFFEE PODS         $12.99
-        CLEANING SUPPLIES   $8.99
-        PHONE CHARGER       $24.99
-        SNACKS              $15.54
-        SHAMPOO             $9.99
+        ORGANIC MILK         ₹399
+        BREAD LOAF          ₹200
+        COFFEE PODS         ₹1039
+        CLEANING SUPPLIES   ₹719
+        PHONE CHARGER       ₹1999
+        SNACKS              ₹1243
+        SHAMPOO             ₹799
         
-        SUBTOTAL            $80.00
-        TAX                 $7.43
-        TOTAL               $87.43
+        SUBTOTAL            ₹6400
+        TAX                 ₹595
+        TOTAL               ₹6995
         
         CREDIT CARD ****4521
         ${new Date().toLocaleDateString()}
@@ -74,13 +74,13 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
       const mockData = {
         merchant: 'Target Store #1234',
         date: new Date().toISOString().split('T')[0],
-        total: 87.43,
-        tax: 7.43,
-        subtotal: 80.00,
+        total: 6995,
+        tax: 595,
+        subtotal: 6400,
         items: [
-          { name: 'Organic Milk', price: 4.99, category: 'Groceries' },
-          { name: 'Bread', price: 2.50, category: 'Groceries' },
-          { name: 'Coffee Pods', price: 12.99, category: 'Groceries' }
+          { name: 'Organic Milk', price: 399, category: 'Groceries' },
+          { name: 'Bread', price: 200, category: 'Groceries' },
+          { name: 'Coffee Pods', price: 1039, category: 'Groceries' }
         ],
         paymentMethod: 'Credit Card ending in 4521',
         confidence: 85,
@@ -242,7 +242,7 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Amount</p>
-                    <p className="font-medium text-lg">${scannedData.total}</p>
+                    <p className="font-medium text-lg">₹{scannedData.total.toLocaleString('en-IN')}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Payment Method</p>
@@ -258,7 +258,7 @@ export function ReceiptScanner({ onClose }: ReceiptScannerProps) {
                         <p className="font-medium text-sm">{item.name}</p>
                         <p className="text-xs text-gray-500">{item.category}</p>
                       </div>
-                      <p className="font-medium">${item.price}</p>
+                      <p className="font-medium">₹{item.price.toLocaleString('en-IN')}</p>
                     </div>
                   ))}
                 </div>

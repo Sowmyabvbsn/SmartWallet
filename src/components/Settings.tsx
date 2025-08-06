@@ -318,11 +318,8 @@ export function Settings() {
               <h4 className="font-medium text-gray-900">Currency</h4>
               <p className="text-sm text-gray-600">Default currency for all transactions</p>
             </div>
-            <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-              <option value="GBP">GBP (£)</option>
-              <option value="CAD">CAD (C$)</option>
+            <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" disabled>
+              <option value="INR">INR (₹)</option>
             </select>
           </div>
 

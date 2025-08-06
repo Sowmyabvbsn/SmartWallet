@@ -81,7 +81,7 @@ export function Analytics() {
             </div>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Avg Monthly Expense</h3>
-          <p className="text-xl sm:text-2xl font-bold text-gray-900">${avgMonthlyExpense.toLocaleString()}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{avgMonthlyExpense.toLocaleString('en-IN')}</p>
           <p className="text-sm text-red-600">+8% from last month</p>
         </div>
 
@@ -94,10 +94,10 @@ export function Analytics() {
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">Top Category</h3>
           <p className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">{highestCategory.name}</p>
-          <p className="text-sm text-gray-600">${highestCategory.amount.toFixed(2)}</p>
+          <p className="text-sm text-gray-600">₹{highestCategory.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <p className="text-2xl font-bold text-gray-900">₹{totalUpcoming.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
           <div className="flex items-center justify-between mb-4">
             <div className="bg-orange-50 p-3 rounded-2xl">
               <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
@@ -121,7 +121,7 @@ export function Analytics() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+              <Tooltip formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']} />
               <Line 
                 type="monotone" 
                 dataKey="spending" 
@@ -192,7 +192,7 @@ export function Analytics() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="h-2 rounded-full transition-all duration-500"
+                    <span className="text-xs sm:text-sm text-gray-600">₹{category.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                         style={{ 
                           width: `${category.percentage}%`,
                           backgroundColor: COLORS[index % COLORS.length]
@@ -272,28 +272,28 @@ export function Analytics() {
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Reduce Food & Dining</h4>
             <p className="text-xs sm:text-sm text-gray-600">
-              You spent 32% more on dining out this month. Consider meal planning to save ~$200/month.
+              You spent 32% more on dining out this month. Consider meal planning to save ~₹16,000/month.
             </p>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Optimize Subscriptions</h4>
             <p className="text-xs sm:text-sm text-gray-600">
-              You have 7 active subscriptions. Canceling unused ones could save $45/month.
+              You have 7 active subscriptions. Canceling unused ones could save ₹3,600/month.
             </p>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
-            <h4 className="font-medium text-gray-900 mb-2">Increase Emergency Fund</h4>
+              <span className="text-xs sm:text-sm text-gray-600">₹1,68,000 / ₹4,00,000</span>
             <p className="text-xs sm:text-sm text-gray-600">
-              You're close to your emergency fund goal. Consider increasing contributions by $100/month.
+              You're close to your emergency fund goal. Consider increasing contributions by ₹8,000/month.
             </p>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
             <h4 className="font-medium text-gray-900 mb-2">Investment Opportunity</h4>
             <p className="text-xs sm:text-sm text-gray-600">
-              With your current savings rate, you could invest an additional $300/month.
+              With your current savings rate, you could invest an additional ₹24,000/month.
             </p>
           </div>
-        </div>
+              <span className="text-xs sm:text-sm text-gray-600">₹9,60,000 / ₹20,00,000</span>
       </div>
 
       {/* Monthly Comparison */}
@@ -303,9 +303,9 @@ export function Analytics() {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthlyTrends}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+              <span className="text-xs sm:text-sm text-gray-600">₹6,80,000 / ₹8,00,000</span>
+              <span className="text-xs sm:text-sm text-gray-600">₹12,40,000 / ₹16,00,000</span>
+              <Tooltip formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']} />
               <Bar dataKey="income" fill="#10B981" name="Income" />
               <Bar dataKey="spending" fill="#3B82F6" name="Spending" />
               <Bar dataKey="savings" fill="#F59E0B" name="Savings" />
