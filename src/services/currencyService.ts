@@ -93,29 +93,6 @@ class CurrencyService {
   getCurrencySymbol(currencyCode: string): string {
     return '₹';
   }
-}
-
-// Add delay function that was missing
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-export const currencyService = new CurrencyService();
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currencyCode,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
-  }
-
-  setUserCurrency(currencyCode: string): void {
-    this.userCurrency = currencyCode;
-    localStorage.setItem('userCurrency', currencyCode);
-  }
-
-  getUserCurrency(): string {
-    return localStorage.getItem('userCurrency') || this.userCurrency;
-  }
 
   async convertTransactionAmounts(transactions: any[], targetCurrency: string): Promise<any[]> {
     const userCurrency = this.getUserCurrency();
@@ -143,11 +120,6 @@ export const currencyService = new CurrencyService();
     );
 
     return convertedTransactions;
-  }
-
-  getCurrencySymbol(currencyCode: string): string {
-    const currency = this.currencies.find(c => c.code === currencyCode);
-    return currency?.symbol || currencyCode;
   }
 }
 

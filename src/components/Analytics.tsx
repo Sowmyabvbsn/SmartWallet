@@ -28,6 +28,7 @@ export function Analytics() {
   const savingsRate = 37;
   const avgMonthlyExpense = 2528;
   const highestCategory = spendingByCategory[0];
+  const totalUpcoming = 4000;
 
   const COLORS = ['#FF8042', '#8884D8', '#00C49F', '#FFBB28', '#FF8042', '#8DD1E1'];
 
@@ -97,7 +98,7 @@ export function Analytics() {
           <p className="text-sm text-gray-600">₹{highestCategory.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
         </div>
 
-              <p className="text-2xl font-bold text-gray-900">₹{totalUpcoming.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
             <div className="bg-orange-50 p-3 rounded-2xl">
               <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
@@ -174,7 +175,7 @@ export function Analytics() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+                  <Tooltip formatter={(value) => [`₹${value}`, 'Amount']} />
                 </RechartsPieChart>
               </ResponsiveContainer>
             </div>
@@ -188,11 +189,11 @@ export function Analytics() {
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-xs sm:text-sm font-medium text-gray-900">{category.name}</span>
-                      <span className="text-xs sm:text-sm text-gray-600">${category.amount.toFixed(2)}</span>
+                      <span className="text-xs sm:text-sm text-gray-600">₹{category.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                    <span className="text-xs sm:text-sm text-gray-600">₹{category.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        className="h-2 rounded-full transition-all duration-300"
                         style={{ 
                           width: `${category.percentage}%`,
                           backgroundColor: COLORS[index % COLORS.length]
@@ -215,7 +216,7 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Emergency Fund</span>
-                <span className="text-xs sm:text-sm text-gray-600">$8,500 / $10,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">₹8,50,000 / ₹10,00,000</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
                 <div className="bg-green-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '85%' }} />
@@ -226,7 +227,7 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Vacation Fund</span>
-                <span className="text-xs sm:text-sm text-gray-600">$2,100 / $5,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">₹2,10,000 / ₹5,00,000</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
                 <div className="bg-blue-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '42%' }} />
@@ -237,7 +238,7 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">New Car</span>
-                <span className="text-xs sm:text-sm text-gray-600">$12,000 / $25,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">₹12,00,000 / ₹25,00,000</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
                 <div className="bg-purple-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '48%' }} />
@@ -248,7 +249,7 @@ export function Analytics() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-900">Investment Portfolio</span>
-                <span className="text-xs sm:text-sm text-gray-600">$15,500 / $20,000</span>
+                <span className="text-xs sm:text-sm text-gray-600">₹15,50,000 / ₹20,00,000</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
                 <div className="bg-indigo-500 h-2 sm:h-3 rounded-full transition-all duration-500" style={{ width: '77.5%' }} />
@@ -282,7 +283,7 @@ export function Analytics() {
             </p>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-100/50 shadow-sm hover:shadow-md transition-all duration-200">
-              <span className="text-xs sm:text-sm text-gray-600">₹1,68,000 / ₹4,00,000</span>
+            <h4 className="font-medium text-gray-900 mb-2">Emergency Fund Goal</h4>
             <p className="text-xs sm:text-sm text-gray-600">
               You're close to your emergency fund goal. Consider increasing contributions by ₹8,000/month.
             </p>
@@ -293,7 +294,7 @@ export function Analytics() {
               With your current savings rate, you could invest an additional ₹24,000/month.
             </p>
           </div>
-              <span className="text-xs sm:text-sm text-gray-600">₹9,60,000 / ₹20,00,000</span>
+        </div>
       </div>
 
       {/* Monthly Comparison */}
@@ -303,8 +304,8 @@ export function Analytics() {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthlyTrends}>
               <CartesianGrid strokeDasharray="3 3" />
-              <span className="text-xs sm:text-sm text-gray-600">₹6,80,000 / ₹8,00,000</span>
-              <span className="text-xs sm:text-sm text-gray-600">₹12,40,000 / ₹16,00,000</span>
+              <XAxis dataKey="month" />
+              <YAxis />
               <Tooltip formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']} />
               <Bar dataKey="income" fill="#10B981" name="Income" />
               <Bar dataKey="spending" fill="#3B82F6" name="Spending" />
