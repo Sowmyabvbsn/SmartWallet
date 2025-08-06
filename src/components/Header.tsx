@@ -3,7 +3,7 @@ import { UserButton, useUser } from '@clerk/clerk-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Wallet, Home, FileText, BarChart3, Settings, Camera, TrendingUp, Calendar, Bot, Download, Users, Globe, CreditCard, Menu, X } from 'lucide-react';
 
-type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
+type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'market-insights' | 'settings';
 
 interface HeaderProps {
   activeTab: TabType;
@@ -92,6 +92,7 @@ export function Header({ activeTab, onTabChange, onScanReceipt }: HeaderProps) {
                 { id: 'budgets', icon: Users, label: 'Budgets' },
                 { id: 'currency', icon: Globe, label: 'Currency' },
                 { id: 'wallet', icon: CreditCard, label: 'Passes' },
+                { id: 'market-insights', icon: TrendingUp, label: 'Market' },
                 { id: 'bank-connection', icon: CreditCard, label: 'Banks' },
                 { id: 'settings', icon: Settings, label: 'Settings' },
               ].map(({ id, icon: Icon, label }) => (
@@ -128,6 +129,7 @@ export function Header({ activeTab, onTabChange, onScanReceipt }: HeaderProps) {
               { id: 'budgets', icon: Users, label: 'Budgets' },
               { id: 'currency', icon: Globe, label: 'Currency' },
               { id: 'wallet', icon: CreditCard, label: 'Passes' },
+              { id: 'market-insights', icon: TrendingUp, label: 'Market' },
               { id: 'bank-connection', icon: CreditCard, label: 'Banks' },
               { id: 'settings', icon: Settings, label: 'Settings' },
             ].map(({ id, icon: Icon, label }) => (

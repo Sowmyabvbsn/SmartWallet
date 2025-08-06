@@ -17,8 +17,12 @@ import { CollaborativeBudgets } from './components/CollaborativeBudgets';
 import { CurrencyConverter } from './components/CurrencyConverter';
 import { MockWalletPasses } from './components/MockWalletPasses';
 import { MockBankConnection } from './components/MockBankConnection';
+import { EnhancedDashboard } from './components/EnhancedDashboard';
+import { EnhancedCurrencyConverter } from './components/EnhancedCurrencyConverter';
+import { MarketInsights } from './components/MarketInsights';
+import { EnhancedReceiptScanner } from './components/EnhancedReceiptScanner';
 
-type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings';
+type TabType = 'dashboard' | 'transactions' | 'analytics' | 'investments' | 'bills' | 'ai-assistant' | 'export' | 'budgets' | 'currency' | 'wallet' | 'settings' | 'market-insights';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
@@ -31,12 +35,12 @@ function App() {
 
   const renderContent = () => {
     if (showScanner) {
-      return <ReceiptScanner onClose={() => setShowScanner(false)} />;
+      return <EnhancedReceiptScanner onClose={() => setShowScanner(false)} />;
     }
 
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard onScanReceipt={() => setShowScanner(true)} />;
+        return <EnhancedDashboard onScanReceipt={() => setShowScanner(true)} />;
       case 'transactions':
         return <Transactions />;
       case 'analytics':
@@ -52,13 +56,13 @@ function App() {
       case 'budgets':
         return <CollaborativeBudgets />;
       case 'currency':
-        return <CurrencyConverter />;
+        return <EnhancedCurrencyConverter />;
       case 'wallet':
         return <MockWalletPasses />;
       case 'settings':
         return <Settings />;
       default:
-        return <Dashboard onScanReceipt={() => setShowScanner(true)} />;
+        return <EnhancedDashboard onScanReceipt={() => setShowScanner(true)} />;
     }
   };
 
@@ -80,7 +84,7 @@ function App() {
           <main className="pb-20">
             <Routes>
               <Route path="/" element={renderContent()} />
-              <Route path="/dashboard" element={<Dashboard onScanReceipt={() => setShowScanner(true)} />} />
+              <Route path="/dashboard" element={<EnhancedDashboard onScanReceipt={() => setShowScanner(true)} />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/investments" element={<InvestmentDashboard />} />
@@ -88,7 +92,8 @@ function App() {
               <Route path="/ai-assistant" element={<AIAssistant />} />
               <Route path="/export" element={<ExportCenter />} />
               <Route path="/budgets" element={<CollaborativeBudgets />} />
-              <Route path="/currency" element={<CurrencyConverter />} />
+              <Route path="/currency" element={<EnhancedCurrencyConverter />} />
+              <Route path="/market-insights" element={<MarketInsights />} />
               <Route path="/wallet" element={<MockWalletPasses />} />
               <Route path="/bank-connection" element={<MockBankConnection />} />
               <Route path="/settings" element={<Settings />} />
